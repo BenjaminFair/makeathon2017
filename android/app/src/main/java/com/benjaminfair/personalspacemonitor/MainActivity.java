@@ -6,7 +6,7 @@ import android.support.design.widget.BottomNavigationView;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
 
-import layout.HistoryFragment;
+import layout.ChartsFragment;
 import layout.HomeFragment;
 import layout.SettingsFragment;
 
@@ -22,9 +22,9 @@ public class MainActivity extends AppCompatActivity {
                     getSupportFragmentManager().beginTransaction()
                             .replace(R.id.content, new HomeFragment()).commit();
                     return true;
-                case R.id.navigation_history:
+                case R.id.navigation_charts:
                     getSupportFragmentManager().beginTransaction()
-                            .replace(R.id.content, new HistoryFragment()).commit();
+                            .replace(R.id.content, new ChartsFragment()).commit();
                     return true;
                 case R.id.navigation_settings:
                     getSupportFragmentManager().beginTransaction()

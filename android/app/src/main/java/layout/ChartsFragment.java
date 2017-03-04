@@ -8,9 +8,9 @@ import android.view.ViewGroup;
 
 import com.benjaminfair.personalspacemonitor.R;
 
-public class HistoryFragment extends Fragment {
+public class ChartsFragment extends Fragment {
 
-    public HistoryFragment() {
+    public ChartsFragment() {
         // Required empty public constructor
     }
 
