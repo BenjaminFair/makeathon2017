@@ -1,5 +1,8 @@
 package com.benjaminfair.personalspacemonitor;
 
+import android.app.Activity;
+import android.bluetooth.BluetoothAdapter;
+import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothGattCharacteristic;
 import android.content.BroadcastReceiver;
 import android.content.ComponentName;
@@ -12,17 +15,22 @@ import android.os.Handler;
 import android.os.IBinder;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.MenuItem;
+import android.widget.TextView;
 
 import java.util.Arrays;
 
 public class MainActivity extends AppCompatActivity {
     private final static String TAG = MainActivity.class.getSimpleName();
 
+    public static final int REQUEST_SELECT_DEVICE = 1;
+
     public PersonalSpaceService mService;
+    public BluetoothDevice mDevice;
     public Data mData = Data.getInstance();
     public Handler mHandler = new Handler();
 
@@ -38,6 +46,24 @@ public class MainActivity extends AppCompatActivity {
             }
         }
     };
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        Log.d(TAG, "Got activity result of type " + requestCode);
+
+        switch (requestCode) {
+            case REQUEST_SELECT_DEVICE:
+                Log.d(TAG, "It was a select device type");
+                if (resultCode == Activity.RESULT_OK && data != null) {
+                    String deviceAddress = data.getStringExtra(BluetoothDevice.EXTRA_DEVICE);
+                    mDevice = BluetoothAdapter.getDefaultAdapter().getRemoteDevice(deviceAddress);
+
+                    Log.d(TAG, "... onActivityResultdevice.address==" + mDevice + "mserviceValue" + mService);
+                    mService.connect(deviceAddress);
+                }
+                break;
+        }
+    }
 
     //service connected/disconnected
     private ServiceConnection mServiceConnection = new ServiceConnection() {

@@ -9,12 +9,14 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.LocalBroadcastManager;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 
 public class SetupFragment extends Fragment {
+    private static final String TAG = SetupFragment.class.getSimpleName();
 
     private MainActivity parent; // TODO: This is terrible
 
@@ -64,7 +66,8 @@ public class SetupFragment extends Fragment {
                     parent.mService.disconnect();
                 } else {
                     Intent newIntent = new Intent(getActivity(), DeviceListActivity.class);
-                    startActivity(newIntent);
+                    Log.d(TAG, "Starting device picker");
+                    getActivity().startActivityForResult(newIntent, MainActivity.REQUEST_SELECT_DEVICE);
                 }
             }
         });

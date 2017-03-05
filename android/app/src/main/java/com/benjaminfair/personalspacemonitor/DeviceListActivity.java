@@ -225,7 +225,7 @@ public class DeviceListActivity extends Activity {
             mBluetoothAdapter.stopLeScan(mLeScanCallback);
 
             Bundle b = new Bundle();
-            b.putString(BluetoothDevice.EXTRA_DEVICE, deviceList.get(position).getAddress());
+            b.putString(BluetoothDevice.EXTRA_DEVICE, device.getAddress());
 
             Intent result = new Intent();
             result.putExtras(b);
