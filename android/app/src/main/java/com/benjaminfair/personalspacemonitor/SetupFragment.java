@@ -51,16 +51,16 @@ public class SetupFragment extends Fragment {
         parent = (MainActivity) getActivity();
 
         btnConnect = (Button) view.findViewById(R.id.connect_disconnect);
-        if (parent.mService.getState() == PersonalSpaceService.State.CONNECTED) {
+        if (parent.mService != null && parent.mService.getState() == PersonalSpaceService.State.CONNECTED) {
             btnConnect.setText(R.string.disconnect);
-        } else if (parent.mService.getState() == PersonalSpaceService.State.CONNECTING) {
+        } else if (parent.mService != null && parent.mService.getState() == PersonalSpaceService.State.CONNECTING) {
             btnConnect.setEnabled(false);
         }
 
         btnConnect.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (parent.mService.getState() == PersonalSpaceService.State.CONNECTED) {
+                if (parent.mService != null && parent.mService.getState() == PersonalSpaceService.State.CONNECTED) {
                     parent.mService.disconnect();
                 } else {
                     Intent newIntent = new Intent(getActivity(), DeviceListActivity.class);

@@ -52,10 +52,8 @@ class Data {
         mArrayEntries.add(new Entry(mArrayEntries.size(), m.getArea()));
     }
 
-    public LineData getAreaLineData() {
-        LineDataSet dataSet = new LineDataSet(mArrayEntries, "Personal Space (m^2)");
-        LineData lineData = new LineData(dataSet);
-        return lineData;
+    public List<Entry> getAreaData() {
+        return mArrayEntries;
     }
 
 }

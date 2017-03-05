@@ -7,6 +7,11 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.github.mikephil.charting.charts.LineChart;
+import com.github.mikephil.charting.data.Entry;
+import com.github.mikephil.charting.data.LineData;
+import com.github.mikephil.charting.data.LineDataSet;
+
+import java.util.List;
 
 public class ChartsFragment extends Fragment {
 
@@ -22,8 +27,14 @@ public class ChartsFragment extends Fragment {
     private Runnable mUpdateData = new Runnable() {
         @Override
         public void run() {
-            mAreaChart.setData(parent.mData.getAreaLineData());
-            mAreaChart.invalidate();
+            List<Entry> entries = parent.mData.getAreaData();
+            if (entries.size() > 0) {
+                LineDataSet lineDataSet = new LineDataSet(entries, "Personal Space (m^2)");
+                LineData lineData = new LineData(lineDataSet);
+
+                mAreaChart.setData(lineData);
+                mAreaChart.invalidate();
+            }
             parent.mHandler.postDelayed(this, UPDATE_PERIOD);
         }
     };

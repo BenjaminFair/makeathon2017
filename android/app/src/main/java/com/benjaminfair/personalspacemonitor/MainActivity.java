@@ -18,7 +18,7 @@ public class MainActivity extends AppCompatActivity {
     private final static String TAG = MainActivity.class.getSimpleName();
 
     public PersonalSpaceService mService;
-    public Data mData;
+    public Data mData = new Data();
     public Handler mHandler = new Handler();
 
     private BroadcastReceiver mBroadcastReceiver = new BroadcastReceiver() {
