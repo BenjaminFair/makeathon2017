@@ -29,7 +29,7 @@ class Data {
     static class Measurement {
         private static final int vOffset = 0; // cm
         private static final int hOffset = 0; // cm
-        private int front, right, back, left;
+        public int front, right, back, left;
         private float area;
 
         Measurement(byte[] in) {
@@ -59,6 +59,14 @@ class Data {
 
     List<Entry> getAreaData() {
         return mArrayEntries;
+    }
+
+    Measurement getLatestMeasurement() {
+        if (mData.size() > 0) {
+            return mData.get(mData.size() - 1);
+        } else {
+            return null;
+        }
     }
 
     void clear() {
