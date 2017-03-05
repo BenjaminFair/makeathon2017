@@ -229,8 +229,10 @@ void setup(void)
   //The second parameter is for turning debug printing on for the ACI Commands and Events so they be printed on the Serial
   lib_aci_init(&aci_state, false);
   
-  //  Send data every second
+  // Send data every second
   t.every(1000, send_data);
+  // Collect one sonar sensor every 1/4 sec
+  t.every(200, get_data);
   
   Serial.println(F("Set up done"));
 }
@@ -417,11 +419,6 @@ void aci_loop()
           lib_aci_change_timing_GAP_PPCP(); // change the timing on the link as specified in the nRFgo studio -> nRF8001 conf. -> GAP.
                                             // Used to increase or decrease bandwidth
           timing_change_done = true;
-
-          char hello[]="Hello World, works";
-          uart_tx((uint8_t *)&hello[0], strlen(hello));
-          Serial.print(F("Sending :"));
-          Serial.println(hello);
         }
         break;
 
@@ -532,31 +529,32 @@ void aci_loop()
   }
 }
 
-void get_data(uint16_t *data){
-  Serial.println(F("data:"));
-  for(int i = 0; i < SONAR_NUM; i++) {
-    data[i] = sonar[i].ping_cm();
-    if(!data[i]) {
-      data[i] = MAX_DISTANCE;
-    }
-    Serial.print(F(" Sonar"));
-    Serial.print(i);
-    Serial.print(F(": "));
-    Serial.println(data[i]);
+void get_data(){
+  cm[currentSensor] = sonar[currentSensor].ping_cm();
+  if(!cm[currentSensor]) {
+    cm[currentSensor] = MAX_DISTANCE;
   }
+  
+  Serial.print(F(" Sonar"));
+  Serial.print(currentSensor);
+  Serial.print(F(": "));
+  Serial.println(cm[currentSensor]);
+  currentSensor++;
+  currentSensor%=SONAR_NUM;
 }
 
 void send_data(){
-  uint16_t data16[SONAR_NUM];
   uint8_t data8[2*SONAR_NUM];
-  
-  get_data(data16);
-  
-  for(int i = 0; i < sizeof(data16); i++){
-    data8[i*2] = data16[i] & 0xFF;
-    data8[i*2 + 1] = (data16[i] & 0xFF00) >> 8;
+  Serial.println(F("Data: "));
+  for(int i = 0; i < SONAR_NUM; i++){
+    Serial.print(F(" ( "));
+    data8[i*2] = cm[i] & 0xFF;
+    Serial.print(data8[i*2]);
+    Serial.print(F(", "));
+    data8[i*2 + 1] = (cm[i] & 0xFF00) >> 8;
+    Serial.print(data8[i*2 + 1]);
+    Serial.println(F(" )"));
   }
-
   uart_tx(data8, sizeof(data8));
 }
 
