@@ -2,9 +2,11 @@ package com.benjaminfair.personalspacemonitor;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 
 import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.data.Entry;
@@ -14,12 +16,14 @@ import com.github.mikephil.charting.data.LineDataSet;
 import java.util.List;
 
 public class ChartsFragment extends Fragment implements View.OnClickListener {
+    private static final String TAG = ChartsFragment.class.getSimpleName();
 
     private static final int UPDATE_PERIOD = 1000; // ms
 
     private MainActivity parent; // TODO: EVIL!!
     private Data mData = Data.getInstance();
     private LineChart mAreaChart;
+    private Button mClearData;
 
     public ChartsFragment() {
         // Required empty public constructor
@@ -48,6 +52,9 @@ public class ChartsFragment extends Fragment implements View.OnClickListener {
 
         parent = (MainActivity) getActivity();
 
+        mClearData = (Button) view.findViewById(R.id.clear_data);
+        mClearData.setOnClickListener(this);
+
         mAreaChart = (LineChart) view.findViewById(R.id.area_chart);
         parent.mHandler.post(mUpdateData);
 
@@ -65,6 +72,7 @@ public class ChartsFragment extends Fragment implements View.OnClickListener {
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.clear_data:
+                Log.d(TAG, "Clearing data");
                 mData.clear();
                 mAreaChart.clear();
                 mAreaChart.invalidate();

@@ -27,13 +27,13 @@ class Data {
     private Data() {}
 
     static class Measurement {
-        private static final int vOffset = 30; // cm
-        private static final int hOffset = 60; // cm
+        private static final int vOffset = 0; // cm
+        private static final int hOffset = 0; // cm
         private int front, right, back, left;
         private float area;
 
         Measurement(byte[] in) {
-            front = ((int) in[0] & 0xff) | (((int) in[1] & 0xff) << 8);
+            front = (in[0] & 0xff) | ((in[1] & 0xff) << 8);
             right = (in[2] & 0xff) | ((in[3] & 0xff) << 8);
             back = (in[4] & 0xff) | ((in[5] & 0xff) << 8);
             left = (in[6] & 0xff) | ((in[7] & 0xff) << 8);
