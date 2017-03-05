@@ -37,7 +37,7 @@ class Data {
             right = (in[2] & 0xff) | ((in[3] & 0xff) << 8);
             back = (in[4] & 0xff) | ((in[5] & 0xff) << 8);
             left = (in[6] & 0xff) | ((in[7] & 0xff) << 8);
-            area = (((float) front + (float) back - vOffset) * ((float) left + (float) right - hOffset)) / 1000000.0f; // convert from cm^2 to m^2
+            area = (((float) front + (float) back - vOffset) * ((float) left + (float) right - hOffset)) / 10000.0f; // convert from cm^2 to m^2
             Log.d(TAG, "Front " + front + " Right " + right + " Back " + back + " Left " + left + " Area " + area);
             if (area < 0)
                 area = 0;
