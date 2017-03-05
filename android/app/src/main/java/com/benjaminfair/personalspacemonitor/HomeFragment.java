@@ -1,4 +1,4 @@
-package layout;
+package com.benjaminfair.personalspacemonitor;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;

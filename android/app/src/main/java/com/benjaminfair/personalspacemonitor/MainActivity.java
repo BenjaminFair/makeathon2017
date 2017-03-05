@@ -6,10 +6,6 @@ import android.support.design.widget.BottomNavigationView;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
 
-import layout.ChartsFragment;
-import layout.HomeFragment;
-import layout.SettingsFragment;
-
 public class MainActivity extends AppCompatActivity {
 
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
@@ -28,7 +24,7 @@ public class MainActivity extends AppCompatActivity {
                     return true;
                 case R.id.navigation_settings:
                     getSupportFragmentManager().beginTransaction()
-                            .replace(R.id.content, new SettingsFragment()).commit();
+                            .replace(R.id.content, new SetupFragment()).commit();
                     return true;
             }
             return false;
@@ -43,7 +39,7 @@ public class MainActivity extends AppCompatActivity {
 
         if (savedInstanceState == null) {
             getSupportFragmentManager().beginTransaction()
-                    .add(R.id.content, new HomeFragment()).commit();
+                    .add(R.id.content, new SetupFragment()).commit();
         }
 
         BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.navigation);

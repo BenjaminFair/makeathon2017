@@ -1,4 +1,4 @@
-package layout;
+package com.benjaminfair.personalspacemonitor;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -8,9 +8,9 @@ import android.view.ViewGroup;
 
 import com.benjaminfair.personalspacemonitor.R;
 
-public class SettingsFragment extends Fragment {
+public class ChartsFragment extends Fragment {
 
-    public SettingsFragment() {
+    public ChartsFragment() {
         // Required empty public constructor
     }
 
@@ -18,6 +18,6 @@ public class SettingsFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_settings, container, false);
+        return inflater.inflate(R.layout.fragment_history, container, false);
     }
 }
