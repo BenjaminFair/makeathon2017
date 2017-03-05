@@ -6,18 +6,46 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.benjaminfair.personalspacemonitor.R;
+import com.github.mikephil.charting.charts.LineChart;
 
 public class ChartsFragment extends Fragment {
+
+    private static final int UPDATE_PERIOD = 1000; // ms
+
+    private MainActivity parent; // TODO: EVIL!!
+    private LineChart mAreaChart;
 
     public ChartsFragment() {
         // Required empty public constructor
     }
 
+    private Runnable mUpdateData = new Runnable() {
+        @Override
+        public void run() {
+            mAreaChart.setData(parent.mData.getAreaLineData());
+            mAreaChart.invalidate();
+            parent.mHandler.postDelayed(this, UPDATE_PERIOD);
+        }
+    };
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_history, container, false);
+        View view = inflater.inflate(R.layout.fragment_charts, container, false);
+
+        parent = (MainActivity) getActivity();
+
+        mAreaChart = (LineChart) view.findViewById(R.id.area_chart);
+        parent.mHandler.post(mUpdateData);
+
+        return view;
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+
+        parent.mHandler.removeCallbacks(mUpdateData);
     }
 }

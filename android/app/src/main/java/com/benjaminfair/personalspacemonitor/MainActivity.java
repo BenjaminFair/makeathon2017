@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.os.Bundle;
+import android.os.Handler;
 import android.os.IBinder;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
@@ -18,6 +19,7 @@ public class MainActivity extends AppCompatActivity {
 
     public PersonalSpaceService mService;
     public Data mData;
+    public Handler mHandler = new Handler();
 
     private BroadcastReceiver mBroadcastReceiver = new BroadcastReceiver() {
         @Override
