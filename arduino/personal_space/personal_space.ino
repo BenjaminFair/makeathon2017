@@ -80,10 +80,21 @@ However this removes the need to do the setup of the nRF8001 on every reset.
 */
 
 // Set up sonar sensors
-#define MAX_DISTANCE 500
-#define TRIGGER_PIN  6
-#define ECHO_PIN_0   7
-NewPing sonar(TRIGGER_PIN, ECHO_PIN_0, MAX_DISTANCE);
+#define SONAR_NUM     4    // Number or sensors.
+#define MAX_DISTANCE  500  // Max distance in cm.
+#define TRIGGER_PIN   7
+#define ECHO_PIN_0    2
+#define ECHO_PIN_1    3
+#define ECHO_PIN_2    5
+#define ECHO_PIN_3    6
+uint16_t cm[SONAR_NUM];         // Store ping distances.
+uint8_t currentSensor = 0;          // Which sensor is active.
+NewPing sonar[SONAR_NUM] = { // Sensor object array.
+  NewPing(TRIGGER_PIN, ECHO_PIN_0, MAX_DISTANCE),
+  NewPing(TRIGGER_PIN, ECHO_PIN_1, MAX_DISTANCE),
+  NewPing(TRIGGER_PIN, ECHO_PIN_2, MAX_DISTANCE),
+  NewPing(TRIGGER_PIN, ECHO_PIN_3, MAX_DISTANCE)
+};
 
 
 #ifdef SERVICES_PIPE_TYPE_MAPPING_CONTENT
@@ -522,19 +533,26 @@ void aci_loop()
 }
 
 void get_data(uint16_t *data){
-  data[0] = 68;
-  data[1] = 97;
-  data[2] = 116;
-  data[3] = sonar.ping_cm();
+  Serial.println(F("data:"));
+  for(int i = 0; i < SONAR_NUM; i++) {
+    data[i] = sonar[i].ping_cm();
+    if(!data[i]) {
+      data[i] = MAX_DISTANCE;
+    }
+    Serial.print(F(" Sonar"));
+    Serial.print(i);
+    Serial.print(F(": "));
+    Serial.println(data[i]);
+  }
 }
 
 void send_data(){
-  uint16_t data16[4];
-  uint8_t data8[8];
+  uint16_t data16[SONAR_NUM];
+  uint8_t data8[2*SONAR_NUM];
   
   get_data(data16);
   
-  for (int i = 0; i < sizeof(data16); i++){
+  for(int i = 0; i < sizeof(data16); i++){
     data8[i*2] = data16[i] & 0xFF;
     data8[i*2 + 1] = (data16[i] & 0xFF00) >> 8;
   }
