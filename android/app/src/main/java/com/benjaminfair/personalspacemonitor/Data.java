@@ -1,5 +1,7 @@
 package com.benjaminfair.personalspacemonitor;
 
+import android.util.Log;
+
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
@@ -31,11 +33,12 @@ class Data {
         private float area;
 
         Measurement(byte[] in) {
-            front = in[0] + in[1] << 8;
-            right = in[2] + in[3] << 8;
-            back = in[4] + in[5] << 8;
-            left = in[6] + in[7] << 8;
-            area = ((front + back - vOffset) * (left + right - hOffset)) / 1000000; // convert from cm^2 to m^2
+            front = ((int) in[0] & 0xff) | (((int) in[1] & 0xff) << 8);
+            right = (in[2] & 0xff) | ((in[3] & 0xff) << 8);
+            back = (in[4] & 0xff) | ((in[5] & 0xff) << 8);
+            left = (in[6] & 0xff) | ((in[7] & 0xff) << 8);
+            area = (((float) front + (float) back - vOffset) * ((float) left + (float) right - hOffset)) / 1000000.0f; // convert from cm^2 to m^2
+            Log.d(TAG, "Front " + front + " Right " + right + " Back " + back + " Left " + left + " Area " + area);
             if (area < 0)
                 area = 0;
         }
@@ -48,14 +51,19 @@ class Data {
     private ArrayList<Measurement> mData = new ArrayList<>();
     private List<Entry> mArrayEntries = new ArrayList<>();
 
-    public void addMeasurement(byte[] in) {
+    void addMeasurement(byte[] in) {
         Measurement m = new Measurement(in);
         mData.add(m);
         mArrayEntries.add(new Entry(mArrayEntries.size(), m.getArea()));
     }
 
-    public List<Entry> getAreaData() {
+    List<Entry> getAreaData() {
         return mArrayEntries;
+    }
+
+    void clear() {
+        mData.clear();
+        mArrayEntries.clear();
     }
 
 }

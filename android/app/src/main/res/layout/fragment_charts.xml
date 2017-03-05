@@ -4,9 +4,29 @@
     android:layout_height="match_parent"
     tools:context=".ChartsFragment">
 
-    <com.github.mikephil.charting.charts.LineChart
-        android:id="@+id/area_chart"
+    <android.support.v7.widget.LinearLayoutCompat
+        android:orientation="vertical"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent">
+
+        <com.github.mikephil.charting.charts.LineChart
+            android:id="@+id/area_chart"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="10" />
+
+        <Button
+            android:id="@+id/clear_data"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:text="@string/clear"
+            android:layout_weight="1" />
+
+        <Space
+            android:layout_width="match_parent"
+            android:layout_height="10dp" />
+
+    </android.support.v7.widget.LinearLayoutCompat>
+
 
 </FrameLayout>

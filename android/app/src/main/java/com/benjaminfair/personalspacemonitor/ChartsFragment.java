@@ -13,7 +13,7 @@ import com.github.mikephil.charting.data.LineDataSet;
 
 import java.util.List;
 
-public class ChartsFragment extends Fragment {
+public class ChartsFragment extends Fragment implements View.OnClickListener {
 
     private static final int UPDATE_PERIOD = 1000; // ms
 
@@ -59,5 +59,16 @@ public class ChartsFragment extends Fragment {
         super.onDestroyView();
 
         parent.mHandler.removeCallbacks(mUpdateData);
+    }
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.clear_data:
+                mData.clear();
+                mAreaChart.clear();
+                mAreaChart.invalidate();
+                break;
+        }
     }
 }

@@ -4,9 +4,34 @@
     android:layout_height="match_parent"
     tools:context=".SetupFragment">
 
-    <Button
-        android:id="@+id/connect_disconnect"
+    <android.support.v7.widget.LinearLayoutCompat
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/connect" />
+        android:layout_height="match_parent"
+        android:orientation="vertical" >
+
+        <Space
+            android:layout_width="match_parent"
+            android:layout_height="10dp" />
+
+        <TextView
+            android:id="@+id/connection_status"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textAlignment="center"
+            android:textSize="30dp"
+            android:text="@string/not_connected"
+            android:layout_weight="10"/>
+
+        <Button
+            android:id="@+id/connect_disconnect"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/connect"
+            android:layout_weight="0"/>
+
+        <Space
+            android:layout_width="match_parent"
+            android:layout_height="10dp" />
+
+    </android.support.v7.widget.LinearLayoutCompat>
 </FrameLayout>

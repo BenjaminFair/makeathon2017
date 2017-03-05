@@ -14,6 +14,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.TextView;
 
 public class SetupFragment extends Fragment {
     private static final String TAG = SetupFragment.class.getSimpleName();
@@ -21,6 +22,7 @@ public class SetupFragment extends Fragment {
     private MainActivity parent; // TODO: This is terrible
 
     private Button btnConnect;
+    private TextView connectionStatus;
 
     public SetupFragment() {
         // Required empty public constructor
@@ -35,11 +37,15 @@ public class SetupFragment extends Fragment {
             if (action.equals(PersonalSpaceService.ACTION_GATT_CONNECTED)) {
                 btnConnect.setText(R.string.disconnect);
                 btnConnect.setEnabled(true);
+
+                connectionStatus.setText(R.string.connected);
             }
 
             if (action.equals(PersonalSpaceService.ACTION_GATT_DISCONNECTED)) {
                 btnConnect.setText(R.string.connect);
                 btnConnect.setEnabled(true);
+
+                connectionStatus.setText(R.string.not_connected);
             }
         }
     };
@@ -53,10 +59,14 @@ public class SetupFragment extends Fragment {
         parent = (MainActivity) getActivity();
 
         btnConnect = (Button) view.findViewById(R.id.connect_disconnect);
+        connectionStatus = (TextView) view.findViewById(R.id.connection_status);
+
         if (parent.mService != null && parent.mService.getState() == PersonalSpaceService.State.CONNECTED) {
             btnConnect.setText(R.string.disconnect);
+            connectionStatus.setText(R.string.connected);
         } else if (parent.mService != null && parent.mService.getState() == PersonalSpaceService.State.CONNECTING) {
             btnConnect.setEnabled(false);
+            connectionStatus.setText(R.string.connecting);
         }
 
         btnConnect.setOnClickListener(new View.OnClickListener() {

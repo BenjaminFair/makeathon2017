@@ -5,6 +5,9 @@
     <string name="title_setup">Setup</string>
     <string name="connect">Connect</string>
     <string name="disconnect">Disconnect</string>
+    <string name="connected">Connected</string>
+    <string name="connecting">Connecting…</string>
+    <string name="not_connected">Not Connected</string>
     <string name="ble_not_supported">Bluetooth Low Energy is not supported</string>
     <string name="scan">Scan</string>
     <string name="cancel">Cancel</string>
@@ -13,4 +16,5 @@
     <string name="paired">Pared</string>
     <string name="select_device">Select a device</string>
     <string name="scanning">Scanning…</string>
+    <string name="clear">Clear Data</string>
 </resources>
