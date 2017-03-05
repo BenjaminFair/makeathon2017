@@ -514,10 +514,15 @@ void aci_loop()
 }
 
 void send_data(){
-  uint8_t data[] = {'d', 'a', 't', 'a'};
-  uint8_t len = 4;
+  uint16_t data16[] = {68,97,116,97};
+  uint8_t data8[8];
   
-  uart_tx(data, len);
+  for (int i = 0; i < sizeof(data16); i++){
+    data8[i*2] = data16[i] & 0xFF;
+    data8[i*2 + 1] = (data16[i] & 0xFF00) >> 8;
+  }
+
+  uart_tx(data8, sizeof(data8));
 }
 
 bool stringComplete = false;  // whether the string is complete
