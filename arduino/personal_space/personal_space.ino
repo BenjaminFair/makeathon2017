@@ -79,8 +79,11 @@ This would mean that the setup cannot be changed once put in.
 However this removes the need to do the setup of the nRF8001 on every reset.
 */
 
+#define SEND_INTERVAL 1000 // milliseconds
+
 // Set up sonar sensors
 #define SONAR_NUM     4    // Number or sensors.
+#define POLL_INTERVAL SEND_INTERVAL % (SONAR_NUM+1)
 #define MAX_DISTANCE  500  // Max distance in cm.
 #define TRIGGER_PIN   7
 #define ECHO_PIN_0    2
@@ -230,9 +233,9 @@ void setup(void)
   lib_aci_init(&aci_state, false);
   
   // Send data every second
-  t.every(1000, send_data);
+  t.every(SEND_INTERVAL, send_data);
   // Collect one sonar sensor every 1/4 sec
-  t.every(200, get_data);
+  t.every(POLL_INTERVAL, get_data);
   
   Serial.println(F("Set up done"));
 }
