@@ -1,5 +1,3 @@
-#include <Timer.h>
-
 /* Copyright (c) 2014, Nordic Semiconductor ASA
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -63,8 +61,12 @@ The following instructions describe the steps to be made on the Windows PC:
  */
 #include <SPI.h>
 #include <EEPROM.h>
+#include <Timer.h>
+#include <NewPing.h>
+
 #include <lib_aci.h>
 #include <aci_setup.h>
+
 #include "uart_over_ble.h"
 
 /**
@@ -76,6 +78,12 @@ Include the services_lock.h to put the setup in the OTP memory of the nRF8001.
 This would mean that the setup cannot be changed once put in.
 However this removes the need to do the setup of the nRF8001 on every reset.
 */
+
+// Set up sonar sensors
+#define MAX_DISTANCE 500
+#define TRIGGER_PIN  6
+#define ECHO_PIN_0   7
+NewPing sonar(TRIGGER_PIN, ECHO_PIN_0, MAX_DISTANCE);
 
 
 #ifdef SERVICES_PIPE_TYPE_MAPPING_CONTENT
@@ -513,9 +521,18 @@ void aci_loop()
   }
 }
 
+void get_data(uint16_t *data){
+  data[0] = 68;
+  data[1] = 97;
+  data[2] = 116;
+  data[3] = sonar.ping_cm();
+}
+
 void send_data(){
-  uint16_t data16[] = {68,97,116,97};
+  uint16_t data16[4];
   uint8_t data8[8];
+  
+  get_data(data16);
   
   for (int i = 0; i < sizeof(data16); i++){
     data8[i*2] = data16[i] & 0xFF;
