@@ -1,24 +1,29 @@
 package com.benjaminfair.personalspacemonitor;
 
+import android.bluetooth.BluetoothGattCharacteristic;
 import android.content.BroadcastReceiver;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.ServiceConnection;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.MenuItem;
+
+import java.util.Arrays;
 
 public class MainActivity extends AppCompatActivity {
     private final static String TAG = MainActivity.class.getSimpleName();
 
     public PersonalSpaceService mService;
-    public Data mData = new Data();
+    public Data mData = Data.getInstance();
     public Handler mHandler = new Handler();
 
     private BroadcastReceiver mBroadcastReceiver = new BroadcastReceiver() {
@@ -27,7 +32,9 @@ public class MainActivity extends AppCompatActivity {
             String action = intent.getAction();
 
             if (action.equals(PersonalSpaceService.ACTION_DATA_AVAILABLE)) {
-
+                byte[] data = intent.getByteArrayExtra(PersonalSpaceService.EXTRA_DATA);
+                mData.addMeasurement(data);
+                Log.d(TAG, "Got measurement data: " + Arrays.toString(data));
             }
         }
     };
@@ -77,10 +84,16 @@ public class MainActivity extends AppCompatActivity {
     void service_init() {
         Intent bindIntent = new Intent(this, PersonalSpaceService.class);
         bindService(bindIntent, mServiceConnection, Context.BIND_AUTO_CREATE);
+
+        IntentFilter filter = new IntentFilter();
+        filter.addAction(PersonalSpaceService.ACTION_DATA_AVAILABLE);
+        LocalBroadcastManager.getInstance(this).registerReceiver(mBroadcastReceiver, filter);
     }
 
     void service_deinit() {
         unbindService(mServiceConnection);
+
+        LocalBroadcastManager.getInstance(this).unregisterReceiver(mBroadcastReceiver);
     }
 
     @Override

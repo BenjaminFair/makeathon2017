@@ -18,6 +18,7 @@ public class ChartsFragment extends Fragment {
     private static final int UPDATE_PERIOD = 1000; // ms
 
     private MainActivity parent; // TODO: EVIL!!
+    private Data mData = Data.getInstance();
     private LineChart mAreaChart;
 
     public ChartsFragment() {
@@ -27,7 +28,7 @@ public class ChartsFragment extends Fragment {
     private Runnable mUpdateData = new Runnable() {
         @Override
         public void run() {
-            List<Entry> entries = parent.mData.getAreaData();
+            List<Entry> entries = mData.getAreaData();
             if (entries.size() > 0) {
                 LineDataSet lineDataSet = new LineDataSet(entries, "Personal Space (m^2)");
                 LineData lineData = new LineData(lineDataSet);
