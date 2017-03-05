@@ -201,7 +201,7 @@
         </Characteristic>
     </Service>
     <Gapsettings>
-        <Name>Hello</Name>
+        <Name>PSI</Name>
         <DeviceNameWriteLength>0</DeviceNameWriteLength>
         <LocalPipeOnDeviceName>false</LocalPipeOnDeviceName>
         <DeviceNameShortLength>0</DeviceNameShortLength>
