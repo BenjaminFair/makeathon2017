@@ -53,11 +53,9 @@ public class PersonalSpaceService extends Service {
     private BluetoothAdapter mBluetoothAdapter;
     private String mBluetoothDeviceAddress;
     private BluetoothGatt mBluetoothGatt;
-    private int mConnectionState = STATE_DISCONNECTED;
 
-    private static final int STATE_DISCONNECTED = 0;
-    private static final int STATE_CONNECTING = 1;
-    private static final int STATE_CONNECTED = 2;
+    public enum State {DISCONNECTED, CONNECTING, CONNECTED}
+    private State mState = State.DISCONNECTED;
 
     public final static String ACTION_GATT_CONNECTED =
             "com.benjaminfair.personalspacemonitor.ACTION_GATT_CONNECTED";
@@ -91,7 +89,7 @@ public class PersonalSpaceService extends Service {
             
             if (newState == BluetoothProfile.STATE_CONNECTED) {
                 intentAction = ACTION_GATT_CONNECTED;
-                mConnectionState = STATE_CONNECTED;
+                mState = State.CONNECTED;
                 broadcastUpdate(intentAction);
                 Log.i(TAG, "Connected to GATT server.");
                 // Attempts to discover services after successful connection.
@@ -100,7 +98,7 @@ public class PersonalSpaceService extends Service {
 
             } else if (newState == BluetoothProfile.STATE_DISCONNECTED) {
                 intentAction = ACTION_GATT_DISCONNECTED;
-                mConnectionState = STATE_DISCONNECTED;
+                mState = State.DISCONNECTED;
                 Log.i(TAG, "Disconnected from GATT server.");
                 broadcastUpdate(intentAction);
             }
@@ -110,7 +108,8 @@ public class PersonalSpaceService extends Service {
         public void onServicesDiscovered(BluetoothGatt gatt, int status) {
             if (status == BluetoothGatt.GATT_SUCCESS) {
             	Log.w(TAG, "mBluetoothGatt = " + mBluetoothGatt );
-            	
+
+                enableTXNotification();
                 broadcastUpdate(ACTION_GATT_SERVICES_DISCOVERED);
             } else {
                 Log.w(TAG, "onServicesDiscovered received: " + status);
@@ -221,7 +220,7 @@ public class PersonalSpaceService extends Service {
                 && mBluetoothGatt != null) {
             Log.d(TAG, "Trying to use an existing mBluetoothGatt for connection.");
             if (mBluetoothGatt.connect()) {
-                mConnectionState = STATE_CONNECTING;
+                mState = State.CONNECTING;
                 return true;
             } else {
                 return false;
@@ -238,7 +237,7 @@ public class PersonalSpaceService extends Service {
         mBluetoothGatt = device.connectGatt(this, false, mGattCallback);
         Log.d(TAG, "Trying to create a new connection.");
         mBluetoothDeviceAddress = address;
-        mConnectionState = STATE_CONNECTING;
+        mState = State.CONNECTING;
         return true;
     }
 
@@ -269,6 +268,10 @@ public class PersonalSpaceService extends Service {
         mBluetoothDeviceAddress = null;
         mBluetoothGatt.close();
         mBluetoothGatt = null;
+    }
+
+    public State getState() {
+        return mState;
     }
 
     /**
